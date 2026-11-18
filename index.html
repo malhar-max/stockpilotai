@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StockPilot AI — Indian Stock Research</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#718096;--line:#e7ebf2;--green:#11966e;--red:#d95757;--amber:#b7791f;--navy:#14213d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:var(--navy);color:white;padding:18px max(22px,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:800;letter-spacing:-.5px}.brand span{color:#6ee7b7}.sub{color:#c6d0e0;font-size:12px}
+.wrap{max-width:1180px;margin:26px auto;padding:0 18px}.top{display:grid;grid-template-columns:1.5fr .8fr;gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 5px 20px #17203308}
+h1{font-size:25px;margin:0 0 6px}h2{font-size:17px;margin:0 0 14px}h3{font-size:14px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+.searchrow{display:flex;gap:8px;margin-top:16px}input,select,button{font:inherit}input[type=text],input[type=number],select{background:white;border:1px solid var(--line);border-radius:9px;padding:11px 12px;min-width:0;color:var(--ink)}
+.searchrow input{flex:1}button{border:0;border-radius:9px;padding:11px 15px;background:var(--green);color:white;font-weight:700;cursor:pointer}button.secondary{background:#edf5f2;color:#146b52}button.dark{background:var(--navy)}button:disabled{opacity:.5;cursor:not-allowed}
+.stockline{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:18px}.price{font-size:29px;font-weight:800;letter-spacing:-1px}.pill{display:inline-flex;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#fff4db;color:#8b5c12}.pill.green{background:#e6f7f0;color:#087b58}.pill.red{background:#ffeded;color:#b33b3b}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.stat{padding:12px;background:#f8fafc;border-radius:10px}.stat b{display:block;font-size:16px}.stat span{font-size:11px;color:var(--muted)}
+.chart{height:190px;margin-top:15px;border-radius:10px;background:linear-gradient(180deg,#f8fcfa,#fff);border:1px solid var(--line);position:relative;overflow:hidden}
+.chart svg{width:100%;height:100%}.chartlabel{position:absolute;left:12px;top:9px;font-size:11px;color:var(--muted)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.controls select{flex:1}
+.upload{border:1.5px dashed #b8c7d8;border-radius:12px;padding:16px;text-align:center;background:#fbfdff}.upload input{max-width:100%;margin-top:8px}.preview{max-width:100%;max-height:170px;display:none;margin:12px auto 0;border-radius:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.signal{display:flex;justify-content:space-between;align-items:center;gap:10px}.signal strong{font-size:24px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.metric{border:1px solid var(--line);border-radius:10px;padding:11px}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{font-size:16px}
+.notice{padding:12px;border-radius:10px;background:#fff8e8;color:#78551a;font-size:12px;margin-top:12px}
+ul{padding-left:18px;margin:8px 0;color:#465166}li{margin:6px 0}
+.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.formrow label{font-size:11px;color:var(--muted)}.formrow input{width:100%;margin-top:4px}
+footer{max-width:1180px;margin:18px auto 35px;padding:0 18px;color:var(--muted);font-size:11px}
+@media(max-width:800px){.top,.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.wrap{margin-top:16px}.formrow{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">StockPilot <span>AI</span></div><div class="sub">Indian equity research • NSE / BSE • Educational paper-trading prototype</div></div><div class="sub">DEMO DATA · NOT LIVE MARKET DATA</div></header>
+<main class="wrap">
+<section class="top">
+<div class="card">
+  <div class="small">STOCK RESEARCH WORKSPACE</div><h1>Analyze a stock</h1><div class="muted">Search a company, choose a timeframe and review an evidence-based research scenario.</div>
+  <div class="searchrow"><input id="symbol" type="text" value="RELIANCE" placeholder="Search symbol e.g. RELIANCE, TCS, INFY"><button id="search">Analyze</button></div>
+  <div class="stockline"><div><div class="small" id="company">RELIANCE INDUSTRIES · NSE</div><div class="price" id="price">₹1,360.80</div><div class="small" id="change">Demo reference price · not live</div></div><span class="pill">SIMULATED DATA</span></div>
+  <div class="stats">
+    <div class="stat"><span>RSI (14)</span><b id="rsi">54.2</b></div>
+    <div class="stat"><span>MACD</span><b id="macd">Positive</b></div>
+    <div class="stat"><span>Trend</span><b id="trend">Sideways</b></div>
+    <div class="stat"><span>Volatility</span><b id="vol">Moderate</b></div>
+  </div>
+  <div class="chart"><span class="chartlabel">Illustrative price movement · not historical exchange data</span><svg viewBox="0 0 700 190" preserveAspectRatio="none"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#10a879" stop-opacity=".2"/><stop offset="1" stop-color="#10a879" stop-opacity="0"/></linearGradient></defs><path d="M0 135 L35 118 70 128 105 86 140 102 175 72 210 91 245 65 280 80 315 48 350 67 385 58 420 82 455 56 490 68 525 35 560 49 595 30 630 45 665 22 700 35 L700 190 L0 190Z" fill="url(#fill)"/><polyline points="0,135 35,118 70,128 105,86 140,102 175,72 210,91 245,65 280,80 315,48 350,67 385,58 420,82 455,56 490,68 525,35 560,49 595,30 630,45 665,22 700,35" fill="none" stroke="#11966e" stroke-width="3" vector-effect="non-scaling-stroke"/></svg></div>
+  <div class="controls"><select id="timeframe"><option value="intraday">Intraday · simulated 15m view</option><option value="swing">Swing · 1–4 weeks</option><option value="long">Long-term · 1–5 years</option></select><select id="exchange"><option>NSE</option><option>BSE</option></select></div>
+</div>
+<div class="card">
+  <h2>Screenshot analyzer</h2><div class="muted small">Upload a stock chart screenshot. This prototype previews the image; AI vision analysis needs an API connection.</div>
+  <div class="upload" style="margin-top:14px"><b>Choose chart screenshot</b><br><span class="small">PNG, JPG or WEBP · up to 8 MB</span><br><input id="image" type="file" accept="image/png,image/jpeg,image/webp"><img id="preview" class="preview" alt="Screenshot preview"></div>
+  <div class="notice">Do not treat values read from an old screenshot as current. The production version must cross-check the ticker, timestamp and prices against a licensed data source.</div>
+  <h3 style="margin-top:18px">Optional market inputs</h3>
+  <div class="formrow">
+    <label>Latest price (₹)<input id="inputPrice" type="number" value="1360.80" step=".05"></label>
+    <label>RSI (0–100)<input id="inputRsi" type="number" value="54" min="0" max="100"></label>
+    <label>ATR (₹)<input id="inputAtr" type="number" value="18" min="0" step=".1"></label>
+  </div>
+  <button class="secondary" id="recalc" style="width:100%;margin-top:12px">Recalculate demo scenario</button>
+</div>
+</section>
+<section class="grid">
+<div class="card">
+  <div class="signal"><div><div class="small">RESEARCH ASSESSMENT</div><strong id="signal">WAIT</strong></div><span class="pill" id="confidence">Low confidence · demo</span></div>
+  <p class="muted" id="reason">A neutral setup is shown until adequate, verified market data is connected.</p>
+  <div class="metrics">
+    <div class="metric"><span>Reference entry zone</span><b id="entry">—</b></div>
+    <div class="metric"><span>Risk level</span><b id="stop">—</b></div>
+    <div class="metric"><span>Scenario target 1</span><b id="target1">—</b></div>
+    <div class="metric"><span>Scenario target 2</span><b id="target2">—</b></div>
+    <div class="metric"><span>Scenario target 3</span><b id="target3">—</b></div>
+    <div class="metric"><span>Risk / reward (T1)</span><b id="rr">—</b></div>
+  </div>
+  <div class="notice" id="caveat">Prototype output only. No order is placed. Targets are scenarios, not predictions or guaranteed maximum prices.</div>
+</div>
+<div class="card">
+  <h2>Why this assessment?</h2><ul id="evidence"><li>Connect verified price history to calculate indicators.</li><li>Use the latest available timestamp and source.</li><li>Wait when evidence conflicts or is incomplete.</li></ul>
+  <h3 style="margin-top:18px">Before relying on a research setup</h3>
+  <ul><li>Confirm price, exchange, timestamp and corporate-action adjustments.</li><li>Check liquidity, spreads, news and event risk.</li><li>Backtest the method and account for brokerage, taxes and slippage.</li><li>Paper trade and review results before any real-world use.</li></ul>
+</div>
+</section>
+<section class="card" style="margin-top:18px">
+<h2>Data & integration status</h2><div class="stats">
+<div class="stat"><span>Market data</span><b>Demo only</b></div><div class="stat"><span>AI vision</span><b>Not connected</b></div><div class="stat"><span>AI reports</span><b>Rule-based demo</b></div><div class="stat"><span>Trading</span><b>Disabled</b></div>
+</div><p class="small">To go live, connect a market-data vendor whose NSE/BSE licence permits your use, implement a server-side indicator engine, and connect an AI vision/explanation service. Never expose API keys in frontend code.</p>
+</section>
+</main>
+<footer>StockPilot AI is an educational software prototype, not investment advice. It does not provide personalized recommendations, execute trades, or guarantee returns. All displayed prices and calculations are illustrative demo values.</footer>
+<script>
+const demo={RELIANCE:{name:"Reliance Industries",price:1360.80,rsi:54,atr:18},TCS:{name:"Tata Consultancy Services",price:3250,rsi:48,atr:42},INFY:{name:"Infosys",price:1480,rsi:61,atr:22},HDFCBANK:{name:"HDFC Bank",price:1680,rsi:46,atr:20},ICICIBANK:{name:"ICICI Bank",price:1250,rsi:57,atr:17},TATAMOTORS:{name:"Tata Motors",price:720,rsi:39,atr:16}};
+const $=id=>document.getElementById(id), money=n=>"₹"+Number(n).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+function analyze(){
+ let key=$("symbol").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,""),d=demo[key]||{name:key||"Unknown stock",price:1000,rsi:50,atr:15};
+ let p=Number($("inputPrice").value),r=Number($("inputRsi").value),a=Number($("inputAtr").value),tf=$("timeframe").value;
+ if(!(p>0)||!(a>0)||!(r>=0&&r<=100)){alert("Enter a valid positive price and ATR, and RSI between 0 and 100.");return}
+ $("company").textContent=d.name+" · "+$("exchange").value;
+ $("price").textContent=money(p);$("change").textContent="User-entered demo reference · not live";
+ $("rsi").textContent=r.toFixed(1);$("macd").textContent="Not supplied";$("trend").textContent="Unverified";$("vol").textContent="Unknown";
+ let signal="WAIT",why="Insufficient verified inputs for a defensible directional assessment.";
+ if(r<35){signal="BEARISH WATCH";why="RSI is low; this can indicate weakness or oversold conditions. It is not a buy signal by itself."}
+ else if(r>65){signal="CAUTION";why="RSI is elevated; momentum may be stretched. It is not a sell signal by itself."}
+ else if(r>=45&&r<=60){signal="NEUTRAL";why="RSI is in a middle range. Trend, volume, support/resistance and fundamentals are still required."}
+ let mult=tf==="intraday"?1:tf==="swing"?2.2:4.5;
+ let entryLow=p-a*.15*mult,entryHigh=p+a*.15*mult,stop=p-a*1.2*mult;
+ let t1=p+a*1.2*mult,t2=p+a*2*mult,t3=p+a*3*mult;
+ $("signal").textContent=signal;$("signal").style.color=signal==="BEARISH WATCH"?"#d95757":signal==="CAUTION"?"#b7791f":"#172033";
+ $("confidence").textContent="Low · incomplete data";
+ $("reason").textContent=why+" A production assessment must also validate price history, trend, volume, liquidity and company/event data.";
+ $("entry").textContent=money(entryLow)+"–"+money(entryHigh);$("stop").textContent=money(stop);
+ $("target1").textContent=money(t1);$("target2").textContent=money(t2);$("target3").textContent=money(t3);
+ $("rr").textContent=((t1-p)/(p-stop)).toFixed(2)+":1";
+ $("evidence").innerHTML="<li>RSI ("+r.toFixed(1)+") is the only supplied indicator.</li><li>ATR-based levels are illustrative distances, not statistically validated targets.</li><li>MACD, moving averages, volume, price history and fundamentals are not connected.</li><li>Timeframe selected: "+$("timeframe").selectedOptions[0].text+".</li>";
+ $("caveat").textContent="Demo calculation only: ATR multiples are placeholders, not a validated strategy. Do not use these levels for real trades. No maximum price can be known in advance.";
+}
+$("search").onclick=analyze;$("recalc").onclick=analyze;$("timeframe").onchange=analyze;$("exchange").onchange=analyze;
+$("image").addEventListener("change",e=>{let f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){alert("Please choose an image under 8 MB.");e.target.value="";return}let u=URL.createObjectURL(f);$("preview").src=u;$("preview").style.display="block"});
+analyze();
+</script>
+</body></html>
